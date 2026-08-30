@@ -5,7 +5,23 @@ from unittest.mock import patch
 
 from rich.console import Console
 
-from colab_rich import error, info, print_text, show_progress, success, table, title, warning
+from colab_rich import (
+    bullet_list,
+    code,
+    columns,
+    error,
+    info,
+    markdown,
+    panel,
+    print_text,
+    show_json,
+    show_progress,
+    success,
+    table,
+    title,
+    warning,
+)
+import colab_rich.display as display_module
 import colab_rich.output as output_module
 import colab_rich.progress as progress_module
 
@@ -38,6 +54,49 @@ class OutputTests(unittest.TestCase):
     def test_title_shows_the_title(self):
         title("測試標題")
         self.assertIn("測試標題", self.stream.getvalue())
+
+
+class DisplayTests(unittest.TestCase):
+    def setUp(self):
+        self.stream = io.StringIO()
+        self.test_console = Console(file=self.stream, force_terminal=False, color_system=None)
+        self.console_patch = patch.object(display_module, "_console", self.test_console)
+        self.console_patch.start()
+
+    def tearDown(self):
+        self.console_patch.stop()
+
+    def test_markdown_shows_text(self):
+        markdown("# 標題")
+        self.assertIn("標題", self.stream.getvalue())
+
+    def test_panel_shows_title_and_message(self):
+        panel("重要內容", "注意")
+        output = self.stream.getvalue()
+        self.assertIn("注意", output)
+        self.assertIn("重要內容", output)
+
+    def test_code_shows_source(self):
+        code("print('你好')")
+        self.assertIn("print", self.stream.getvalue())
+
+    def test_bullet_list_shows_all_items(self):
+        bullet_list(["第一項", "第二項"])
+        output = self.stream.getvalue()
+        self.assertIn("第一項", output)
+        self.assertIn("第二項", output)
+
+    def test_columns_shows_all_items(self):
+        columns(["A", "B", "C"])
+        output = self.stream.getvalue()
+        for item in ("A", "B", "C"):
+            self.assertIn(item, output)
+
+    def test_show_json_shows_data(self):
+        show_json({"姓名": "小明", "分數": 90})
+        output = self.stream.getvalue()
+        self.assertIn("小明", output)
+        self.assertIn("90", output)
 
 
 class TableTests(unittest.TestCase):

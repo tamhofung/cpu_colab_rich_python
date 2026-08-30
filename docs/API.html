@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>colab-rich API 文件</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --blue: #2563eb;
+      --dark: #172033;
+      --muted: #526071;
+      --border: #d9e1ec;
+      --background: #f6f8fb;
+      --terminal: #10151f;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--dark);
+      background: var(--background);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+      line-height: 1.7;
+    }
+
+    main {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 48px 24px 72px;
+    }
+
+    h1, h2, h3 { line-height: 1.3; }
+    h1 { margin-bottom: 8px; font-size: 2.4rem; }
+    h2 {
+      margin-top: 52px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--border);
+      color: #173b7a;
+    }
+    h3 { color: #2456a6; }
+    p, li { max-width: 78ch; }
+    a { color: var(--blue); }
+
+    .subtitle {
+      margin-top: 0;
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+
+    .notice {
+      padding: 16px 20px;
+      border-left: 4px solid var(--blue);
+      border-radius: 8px;
+      background: #eaf2ff;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      margin: 28px 0;
+      padding: 16px 20px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: white;
+    }
+
+    code {
+      padding: 2px 5px;
+      border-radius: 4px;
+      background: #e8edf4;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: .92em;
+    }
+
+    pre {
+      overflow-x: auto;
+      margin: 14px 0 20px;
+      padding: 18px 20px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: white;
+      line-height: 1.5;
+    }
+
+    pre code {
+      padding: 0;
+      background: transparent;
+    }
+
+    .terminal-label {
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: .9rem;
+      font-weight: 600;
+    }
+
+    .terminal {
+      color: #e6edf3;
+      border-color: #293448;
+      background: var(--terminal);
+      box-shadow: 0 4px 14px rgba(16, 21, 31, .14);
+      font-family: "SFMono-Regular", Consolas, "Noto Sans Mono CJK TC", monospace;
+    }
+
+    .prompt { color: #72d572; }
+    .blue { color: #7db4ff; }
+    .green { color: #7ee787; }
+    .yellow { color: #f2cc60; }
+    .red { color: #ff8b8b; }
+    .cyan { color: #7ee7e7; }
+    .muted { color: #9aa8ba; }
+
+    .signature {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      color: #173b7a;
+      background: #e8f0ff;
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-weight: 600;
+    }
+
+    footer {
+      margin-top: 64px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    @media (max-width: 600px) {
+      main { padding: 28px 16px 48px; }
+      h1 { font-size: 1.9rem; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <h1>colab-rich API 文件</h1>
+  <p class="subtitle">適合 Google Colab 和 Python 初學者的簡單 Rich 輸出工具</p>
+
+  <p class="notice">
+    這個 library 把 Rich 的常用功能變成簡單函式。你只需要傳入文字、list 或 dictionary，
+    不需要建立 class，也不需要學習 Rich 的 <code>Console</code>。
+  </p>
+
+  <nav aria-label="API 導覽">
+    <a href="#basic">基本輸出</a>
+    <a href="#table">表格</a>
+    <a href="#progress">進度列</a>
+    <a href="#markdown">Markdown</a>
+    <a href="#panel">面板</a>
+    <a href="#code">程式碼</a>
+    <a href="#list">清單和並排</a>
+    <a href="#json">JSON</a>
+    <a href="#complete">完整例子</a>
+  </nav>
+
+  <h2 id="install">安裝</h2>
+  <p>在 Google Colab 的 cell 中執行：</p>
+  <pre><code>!pip install colab-rich</code></pre>
+  <p>然後從 <code>colab_rich</code> 匯入需要的函式：</p>
+  <pre><code>from colab_rich import title, success, table</code></pre>
+
+  <h2 id="basic">基本輸出</h2>
+
+  <h3 id="print-text"><code>print_text(message)</code></h3>
+  <p>顯示普通文字。<code>message</code> 可以是文字、數字或其他 Python 資料。</p>
+  <pre><code>from colab_rich import print_text
+
+print_text("你好，Colab！")</code></pre>
+  <p class="terminal-label">預期 terminal 輸出：</p>
+  <pre class="terminal"><span class="prompt">$</span> 你好，Colab！</pre>
+
+  <h3 id="title"><code>title(message)</code></h3>
+  <p>顯示一個有分隔線的標題，適合分開程式不同部分的輸出。</p>
+  <pre><code>from colab_rich import title
+
+title("第一部分：資料輸入")</code></pre>
+  <p class="terminal-label">預期 terminal 輸出：</p>
+  <pre class="terminal"><span class="blue">──────────────── 第一部分：資料輸入 ────────────────</span></pre>
+
+  <h3 id="messages"><code>success()</code>、<code>info()</code>、<code>warning()</code> 和 <code>error()</code></h3>
+  <p>用不同顏色顯示成功、提示、警告和錯誤訊息。每個函式都只需要一個訊息。</p>
+  <pre><code>from colab_rich import error, info, success, warning
+
+info("程式正在開始")
+success("資料已經儲存")
+warning("還有一項資料未輸入")
+error("找不到檔案")</code></pre>
+  <p class="terminal-label">預期 terminal 輸出：</p>
+  <pre class="terminal"><span class="cyan">ℹ 程式正在開始</span>
+<span class="green">✓ 資料已經儲存</span>
+<span class="yellow">! 還有一項資料未輸入</span>
+<span class="red">✗ 找不到檔案</span></pre>
+
+  <h2 id="table"><code>table(headers, rows)</code></h2>
+  <p>用整齊的表格顯示資料。第一個參數是欄位名稱，第二個參數是資料列。</p>
+  <p class="signature">table(headers, rows)</p>
+  <pre><code>from colab_rich import table
+
+table(
+    ["姓名", "分數"],
+    [
+        ["小明", 90],
+        ["小華", 85],
+    ],
+)</code></pre>
+  <p class="terminal-label">預期 terminal 輸出：</p>
+  <pre class="terminal">┏━━━━━━┳━━━━━━┓
+┃ <span class="blue">姓名</span> ┃ <span class="blue">分數</span> ┃
+┡━━━━━━╇━━━━━━┩
+│ 小明 │ 90   │
+│ 小華 │ 85   │
+└──────┴──────┘</pre>
+  <p>每一列的資料數量必須和欄位數量相同：</p>
+  <pre><code># 正確
+table(["水果", "數量"], [["蘋果", 3], ["香蕉", 5]])
+
+# 不正確：第二列少了一項資料
+table(["姓名", "分數"], [["小明", 90], ["小華"]])</code></pre>
+
+  <h2 id="progress"><code>show_progress(current, total, label='進度')</code></h2>
+  <p>顯示簡單進度列，適合放在 <code>for</code> loop 中。</p>
+  <pre><code>from colab_rich import show_progress
+
+for number in range(1, 6):
+    show_progress(number, 5, "處理中")</code></pre>
+  <p class="terminal-label">預期 terminal 輸出：</p>
+  <pre class="terminal">處理中: [<span class="green">████████████████████</span>] 100.0%</pre>
+  <p>實際執行 loop 時會顯示五行，分別是 20%、40%、60%、80% 和 100%。</p>
+  <ul>
+    <li><code>current</code>：目前完成的數量。</li>
+    <li><code>total</code>：總數量，必須大於 0。</li>
+    <li><code>label</code>：進度列的文字，可以省略。</li>
+  </ul>
+
+  <h2 id="markdown"><code>markdown(message)</code></h2>
+  <p>將 Markdown 文字顯示成格式化內容。</p>
+  <pre><code>from colab_rich import markdown
+
+markdown("""
+# 今日報告
+
+這是 **重要文字**。
+
+- 第一點
+- 第二點
+""")</code></pre>
+  <p class="terminal-label">預期畫面：</p>
+  <pre class="terminal"><span class="blue">今日報告</span>
+
+這是 <span class="green">重要文字</span>。
+
+<span class="green">•</span> 第一點
+<span class="green">•</span> 第二點</pre>
+
+  <h2 id="panel"><code>panel(message, title='')</code></h2>
+  <p>在有框線的面板中顯示重點內容。第二個參數是面板的小標題，可以省略。</p>
+  <pre><code>from colab_rich import panel
+
+panel("請記得檢查答案。", "小提示")</code></pre>
+  <p class="terminal-label">預期 terminal 輸出：</p>
+  <pre class="terminal">╭────────────── <span class="cyan">小提示</span> ──────────────╮
+│ 請記得檢查答案。                           │
+╰────────────────────────────────────────────╯</pre>
+
+  <h2 id="code"><code>code(source, language='python')</code></h2>
+  <p>以語法顏色和行號顯示程式碼。預設語言是 Python。</p>
+  <pre><code>from colab_rich import code
+
+code("""name = '小明'
+print(name)
+""")</code></pre>
+  <p class="terminal-label">預期 terminal 輸出：</p>
+  <pre class="terminal"><span class="muted">1</span> <span class="blue">name</span> = <span class="green">'小明'</span>
+<span class="muted">2</span> <span class="blue">print</span>(name)</pre>
+  <p>也可以指定其他常見語言：</p>
+  <pre><code>code("console.log('Hello');", "javascript")
+code("&lt;h1&gt;Hello&lt;/h1&gt;", "html")</code></pre>
+
+  <h2 id="list">清單和並排項目</h2>
+
+  <h3><code>bullet_list(items)</code></h3>
+  <p>將 list 中的每個項目顯示成一行清單。</p>
+  <pre><code>from colab_rich import bullet_list
+
+bullet_list([
+    "開啟 Google Colab",
+    "輸入程式碼",
+    "執行程式",
+])</code></pre>
+  <p class="terminal-label">預期 terminal 輸出：</p>
+  <pre class="terminal"><span class="green">•</span> 開啟 Google Colab
+<span class="green">•</span> 輸入程式碼
+<span class="green">•</span> 執行程式</pre>
+
+  <h3><code>columns(items)</code></h3>
+  <p>將簡短項目並排顯示。太長的句子不適合使用這個功能。</p>
+  <pre><code>from colab_rich import columns
+
+columns(["紅色", "綠色", "藍色"])</code></pre>
+  <p class="terminal-label">預期 terminal 輸出：</p>
+  <pre class="terminal">紅色                 綠色                 藍色</pre>
+
+  <h2 id="json"><code>show_json(data)</code></h2>
+  <p>將 dictionary 或 list 以容易閱讀的 JSON 樣式顯示。</p>
+  <pre><code>from colab_rich import show_json
+
+student = {
+    "name": "小明",
+    "score": 90,
+    "passed": True,
+}
+
+show_json(student)</code></pre>
+  <p class="terminal-label">預期 terminal 輸出：</p>
+  <pre class="terminal">{
+  <span class="blue">"name"</span>: <span class="green">"小明"</span>,
+  <span class="blue">"score"</span>: <span class="yellow">90</span>,
+  <span class="blue">"passed"</span>: <span class="yellow">true</span>
+}</pre>
+  <p>資料可以是 dictionary、list、文字、數字、<code>True</code>、<code>False</code> 或 <code>None</code>。</p>
+
+  <h2 id="complete">完整小例子</h2>
+  <pre><code>from colab_rich import (
+    bullet_list,
+    code,
+    markdown,
+    show_json,
+    success,
+    table,
+    title,
+)
+
+title("Python 小報告")
+markdown("這是一個 **學生資料** 報告。")
+table(
+    ["姓名", "分數"],
+    [["小明", 90], ["小華", 85]],
+)
+bullet_list(["兩位同學已完成測驗", "平均分數是 87.5"])
+code("print('報告完成！')")
+show_json({"average": 87.5, "passed": True})
+success("報告完成！")</code></pre>
+  <p class="terminal-label">預期 terminal 輸出會包含以下內容：</p>
+  <pre class="terminal"><span class="blue">─────────────── Python 小報告 ───────────────</span>
+這是一個 <span class="green">學生資料</span> 報告。
+┏━━━━━━┳━━━━━━┓
+┃ 姓名 ┃ 分數 ┃
+┡━━━━━━╇━━━━━━┩
+│ 小明 │ 90   │
+│ 小華 │ 85   │
+└──────┴──────┘
+<span class="green">•</span> 兩位同學已完成測驗
+<span class="green">•</span> 平均分數是 87.5
+<span class="green">✓ 報告完成！</span></pre>
+
+  <h2 id="tips">初學者提示</h2>
+  <ol>
+    <li>先學習 <code>title()</code>、<code>success()</code> 和 <code>table()</code>。</li>
+    <li>熟悉後再嘗試 <code>markdown()</code>、<code>panel()</code> 和 <code>code()</code>。</li>
+    <li>每個函式都可以單獨使用，不需要建立 class。</li>
+    <li>Textual 暫時不是這個 library 的一部分；本 library 現階段專注於在 Colab 顯示內容。</li>
+  </ol>
+
+  <p class="notice">提示：terminal 輸出的顏色由 Rich 控制。HTML 文件使用相近的顏色作為示意；表格寬度可能因 terminal 字型而略有不同。</p>
+
+  <footer>
+    colab-rich 0.1.0 · 繁體中文 API 文件 · 這是靜態 HTML，可以直接在瀏覽器開啟。
+  </footer>
+</main>
+</body>
+</html>

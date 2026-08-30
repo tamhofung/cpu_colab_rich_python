@@ -89,6 +89,68 @@ show_progress(3, 10, "下載中")
 
 `current` 不可以小於 0，`total` 必須大於 0，而且 `current` 不可以大於 `total`。
 
+## 顯示更多內容
+
+### Markdown
+
+```python
+from colab_rich import markdown
+
+markdown("""
+# 今日報告
+
+這是 **重要文字**。
+
+- 第一點
+- 第二點
+""")
+```
+
+### 面板
+
+```python
+from colab_rich import panel
+
+panel("請記得檢查答案。", "小提示")
+```
+
+### 程式碼
+
+```python
+from colab_rich import code
+
+code("print('你好！')")
+```
+
+### 項目清單和並排項目
+
+```python
+from colab_rich import bullet_list, columns
+
+bullet_list(["第一項", "第二項", "第三項"])
+columns(["紅色", "綠色", "藍色"])
+```
+
+### JSON 資料
+
+```python
+from colab_rich import show_json
+
+show_json({"姓名": "小明", "分數": 90})
+```
+
+完整的函式、參數和例子請參考 [繁體中文 HTML API 文件](docs/API.html)。
+
+如果你想在 GitHub 直接閱讀純文字版本，也可以查看 [Markdown API 文件](docs/API.md)。
+
+要在本機預覽 HTML 文件，可以在專案根目錄執行：
+
+```bash
+python -m http.server 8000
+```
+
+然後在瀏覽器開啟 <http://localhost:8000/docs/API.html>。
+
 ## 第一版的範圍
 
 這個專案第一版只簡化 Rich 的常用輸出功能。Textual 是另一個建立互動式 terminal app 的工具，目前不在本專案的第一版範圍內。
