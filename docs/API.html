@@ -157,11 +157,12 @@
     <a href="#code">程式碼</a>
     <a href="#list">清單和並排</a>
     <a href="#json">JSON</a>
+    <a href="#widgets">Colab 互動元件</a>
     <a href="#complete">完整例子</a>
   </nav>
 
   <h2 id="install">安裝</h2>
-  <p>在 Google Colab 的 cell 中執行：</p>
+  <p>在 Google Colab 的 cell 中執行。這個基本套件已包含 Rich 和 ipywidgets：</p>
   <pre><code>!pip install colab-rich</code></pre>
   <p>然後從 <code>colab_rich</code> 匯入需要的函式：</p>
   <pre><code>from colab_rich import title, success, table</code></pre>
@@ -325,6 +326,81 @@ show_json(student)</code></pre>
   <span class="blue">"passed"</span>: <span class="yellow">true</span>
 }</pre>
   <p>資料可以是 dictionary、list、文字、數字、<code>True</code>、<code>False</code> 或 <code>None</code>。</p>
+
+  <h2 id="widgets">Google Colab 互動元件</h2>
+  <p>
+    互動元件使用 Google Colab 支援的 <code>ipywidgets</code>。先匯入 Colab 的
+    <code>display</code> 函式，再顯示元件。
+  </p>
+
+  <h3><code>button(label, action=None)</code></h3>
+  <p>
+    建立一個按鈕。<code>action</code> 是按下按鈕後執行的零參數函式。
+    library 會處理按鈕 event 的細節。
+  </p>
+  <pre><code>from IPython.display import display
+from colab_rich import button, success
+
+def say_hello():
+    success("你好！你按下了按鈕。")
+
+display(button("按我", say_hello))</code></pre>
+  <p class="terminal-label">預期 Colab 畫面：</p>
+  <pre class="terminal"><span class="blue">[ 按我 ]</span></pre>
+  <p>按下按鈕後，結果會顯示在按鈕下面：</p>
+  <pre class="terminal"><span class="green">✓ 你好！你按下了按鈕。</span></pre>
+
+  <h3><code>text_box(label, value='')</code></h3>
+  <p>建立單行文字輸入框。使用 <code>.value</code> 讀取輸入的文字。</p>
+  <pre><code>from IPython.display import display
+from colab_rich import text_box
+
+name = text_box("你的名字")
+display(name)
+
+print(name.value)</code></pre>
+  <p class="terminal-label">預期 Colab 畫面：</p>
+  <pre class="terminal">你的名字: [                    ]</pre>
+
+  <h3><code>select_box(label, options)</code></h3>
+  <p>建立下拉選單。使用 <code>.value</code> 讀取目前選擇。</p>
+  <pre><code>from IPython.display import display
+from colab_rich import select_box
+
+color = select_box("選擇顏色", ["紅色", "綠色", "藍色"])
+display(color)
+
+print(color.value)</code></pre>
+  <p class="terminal-label">預期 Colab 畫面：</p>
+  <pre class="terminal">選擇顏色: [紅色        ▼]</pre>
+
+  <h3><code>check_box(label, value=False)</code></h3>
+  <p>建立核取方塊。<code>.value</code> 會是 <code>True</code> 或 <code>False</code>。</p>
+  <pre><code>from IPython.display import display
+from colab_rich import check_box
+
+finished = check_box("我已完成練習")
+display(finished)
+
+print(finished.value)</code></pre>
+  <p class="terminal-label">預期 Colab 畫面：</p>
+  <pre class="terminal">☐ 我已完成練習</pre>
+
+  <h3>互動元件完整例子</h3>
+  <pre><code>from IPython.display import display
+from colab_rich import button, select_box, success, text_box
+
+name = text_box("你的名字")
+color = select_box("喜歡的顏色", ["紅色", "綠色", "藍色"])
+
+def show_answer():
+    success(f"{name.value} 喜歡 {color.value}。")
+
+display(name)
+display(color)
+display(button("顯示答案", show_answer))</code></pre>
+  <p class="terminal-label">按下按鈕後的預期結果：</p>
+  <pre class="terminal"><span class="green">✓ 小明 喜歡 綠色。</span></pre>
 
   <h2 id="complete">完整小例子</h2>
   <pre><code>from colab_rich import (

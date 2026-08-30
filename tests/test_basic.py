@@ -7,6 +7,8 @@ from rich.console import Console
 
 from colab_rich import (
     bullet_list,
+    button,
+    check_box,
     code,
     columns,
     error,
@@ -14,10 +16,12 @@ from colab_rich import (
     markdown,
     panel,
     print_text,
+    select_box,
     show_json,
     show_progress,
     success,
     table,
+    text_box,
     title,
     warning,
 )
@@ -26,6 +30,48 @@ import colab_rich.output as output_module
 import colab_rich.progress as progress_module
 
 table_module = importlib.import_module("colab_rich.table")
+
+
+class WidgetTests(unittest.TestCase):
+    def test_button_without_action_is_a_button(self):
+        from ipywidgets import Button
+
+        widget = button("按我")
+        self.assertIsInstance(widget, Button)
+        self.assertEqual(widget.description, "按我")
+
+    def test_button_runs_a_simple_action(self):
+        from ipywidgets import VBox
+
+        called = []
+
+        def action():
+            called.append(True)
+
+        widget = button("執行", action)
+        self.assertIsInstance(widget, VBox)
+        button_widget = widget.children[0]
+        button_widget._click_handlers.callbacks[0](button_widget)
+        self.assertEqual(called, [True])
+
+    def test_text_box_has_label_and_value(self):
+        widget = text_box("姓名", "小明")
+        self.assertEqual(widget.description, "姓名")
+        self.assertEqual(widget.value, "小明")
+
+    def test_select_box_has_options(self):
+        widget = select_box("顏色", ["紅色", "藍色"])
+        self.assertEqual(widget.description, "顏色")
+        self.assertEqual(tuple(widget.options), ("紅色", "藍色"))
+
+    def test_select_box_rejects_empty_options(self):
+        with self.assertRaisesRegex(ValueError, "至少需要一個選項"):
+            select_box("顏色", [])
+
+    def test_check_box_has_boolean_value(self):
+        widget = check_box("已完成", True)
+        self.assertEqual(widget.description, "已完成")
+        self.assertTrue(widget.value)
 
 
 class OutputTests(unittest.TestCase):

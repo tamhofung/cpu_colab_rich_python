@@ -2,7 +2,7 @@
 
 一個專為 Google Colab 和 Python 初學者設計的簡單 Rich 工具。
 
-你可以用幾個簡單的函式，顯示漂亮的標題、訊息、表格和進度列，而不需要先學習 Rich 的複雜用法。
+你可以用幾個簡單的函式，顯示漂亮的標題、訊息、表格和進度列，也可以在 Google Colab 建立簡單按鈕和輸入元件，而不需要先學習 Rich 或 ipywidgets 的複雜用法。
 
 ## 安裝
 
@@ -150,6 +150,46 @@ python -m http.server 8000
 ```
 
 然後在瀏覽器開啟 <http://localhost:8000/docs/API.html>。
+
+## Google Colab 互動元件
+
+`colab-rich` 也包含幾個簡單的 Google Colab widget。需要按鈕執行的工作，可以寫成普通的零參數函式：
+
+```python
+from IPython.display import display
+from colab_rich import button, success
+
+def say_hello():
+    success("你好！你按下了按鈕。")
+
+display(button("按我", say_hello))
+```
+
+文字輸入框、下拉選單和核取方塊的值，可以使用 `.value` 讀取：
+
+```python
+from IPython.display import display
+from colab_rich import button, select_box, success, text_box
+
+name = text_box("你的名字")
+color = select_box("喜歡的顏色", ["紅色", "綠色", "藍色"])
+
+def show_answer():
+    success(f"{name.value} 喜歡 {color.value}。")
+
+display(name)
+display(color)
+display(button("顯示答案", show_answer))
+```
+
+可用的基本元件：
+
+- `button(label, action=None)`：建立按鈕；`action` 是按下後執行的函式。
+- `text_box(label, value="")`：建立文字輸入框。
+- `select_box(label, options)`：建立下拉選單。
+- `check_box(label, value=False)`：建立核取方塊。
+
+完整的函式、參數和例子請參考 [繁體中文 HTML API 文件](docs/API.html)。
 
 ## 第一版的範圍
 

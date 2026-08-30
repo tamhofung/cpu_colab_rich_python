@@ -282,6 +282,127 @@ show_json(["Python", "Math", "English"])
 
 ---
 
+## Google Colab 互動元件
+
+以下元件直接使用 Google Colab 支援的 `ipywidgets`。先匯入 Colab 的 `display` 函式：
+
+```python
+from IPython.display import display
+```
+
+### `button(label, action=None)`
+
+建立一個按鈕。`action` 是按下按鈕後執行的零參數函式。
+
+```python
+from colab_rich import button, success
+
+def say_hello():
+    success("你好！你按下了按鈕。")
+
+display(button("按我", say_hello))
+```
+
+預期畫面：
+
+```text
+[ 按我 ]
+```
+
+按下按鈕後，結果會顯示在按鈕下面：
+
+```text
+✓ 你好！你按下了按鈕。
+```
+
+如果暫時不需要動作，可以省略 `action`：
+
+```python
+display(button("這是一個按鈕"))
+```
+
+### `text_box(label, value='')`
+
+建立單行文字輸入框。使用 `.value` 讀取學生輸入的文字。
+
+```python
+from IPython.display import display
+from colab_rich import text_box
+
+name = text_box("你的名字")
+display(name)
+
+# 讀取輸入的文字
+print(name.value)
+```
+
+預期畫面：
+
+```text
+你的名字: [                    ]
+```
+
+### `select_box(label, options)`
+
+建立下拉選單。`options` 是選項 list，使用 `.value` 讀取目前選擇。
+
+```python
+from IPython.display import display
+from colab_rich import select_box
+
+color = select_box("選擇顏色", ["紅色", "綠色", "藍色"])
+display(color)
+
+print(color.value)
+```
+
+預期畫面：
+
+```text
+選擇顏色: [紅色        ▼]
+```
+
+### `check_box(label, value=False)`
+
+建立核取方塊。勾選狀態可以從 `.value` 讀取，結果是 `True` 或 `False`。
+
+```python
+from IPython.display import display
+from colab_rich import check_box
+
+finished = check_box("我已完成練習")
+display(finished)
+
+print(finished.value)
+```
+
+預期畫面：
+
+```text
+☐ 我已完成練習
+```
+
+### 互動元件完整例子
+
+```python
+from IPython.display import display
+from colab_rich import button, select_box, success, text_box
+
+name = text_box("你的名字")
+color = select_box("喜歡的顏色", ["紅色", "綠色", "藍色"])
+
+def show_answer():
+    success(f"{name.value} 喜歡 {color.value}。")
+
+display(name)
+display(color)
+display(button("顯示答案", show_answer))
+```
+
+`button()` 會處理按鈕需要的 event 細節，所以 `show_answer()` 不需要接收任何參數。
+
+---
+
 ## 完整小例子
 
 ```python
