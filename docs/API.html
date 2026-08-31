@@ -169,7 +169,7 @@
 
   <h2 id="basic">基本輸出</h2>
 
-  <h3 id="print-text"><code>print_text(message)</code></h3>
+  <h3 id="print-text"><code>print_text(message, style=None)</code></h3>
   <p>顯示普通文字。<code>message</code> 可以是文字、數字或其他 Python 資料。</p>
   <pre><code>from colab_rich import print_text
 
@@ -177,7 +177,7 @@ print_text("你好，Colab！")</code></pre>
   <p class="terminal-label">預期 terminal 輸出：</p>
   <pre class="terminal"><span class="prompt">$</span> 你好，Colab！</pre>
 
-  <h3 id="title"><code>title(message)</code></h3>
+  <h3 id="title"><code>title(message, style="bold blue", align="center")</code></h3>
   <p>顯示一個有分隔線的標題，適合分開程式不同部分的輸出。</p>
   <pre><code>from colab_rich import title
 
@@ -185,7 +185,7 @@ title("第一部分：資料輸入")</code></pre>
   <p class="terminal-label">預期 terminal 輸出：</p>
   <pre class="terminal"><span class="blue">──────────────── 第一部分：資料輸入 ────────────────</span></pre>
 
-  <h3 id="messages"><code>success()</code>、<code>info()</code>、<code>warning()</code> 和 <code>error()</code></h3>
+  <h3 id="messages"><code>success(message, prefix="✓")</code>、<code>info()</code>、<code>warning()</code> 和 <code>error()</code></h3>
   <p>用不同顏色顯示成功、提示、警告和錯誤訊息。每個函式都只需要一個訊息。</p>
   <pre><code>from colab_rich import error, info, success, warning
 
@@ -199,7 +199,7 @@ error("找不到檔案")</code></pre>
 <span class="yellow">! 還有一項資料未輸入</span>
 <span class="red">✗ 找不到檔案</span></pre>
 
-  <h2 id="table"><code>table(headers, rows)</code></h2>
+  <h2 id="table"><code>table(headers, rows, title=None, *, header_style="bold magenta", show_lines=False, expand=False)</code></h2>
   <p>用整齊的表格顯示資料。第一個參數是欄位名稱，第二個參數是資料列。</p>
   <p class="signature">table(headers, rows)</p>
   <pre><code>from colab_rich import table
@@ -225,7 +225,7 @@ table(["水果", "數量"], [["蘋果", 3], ["香蕉", 5]])
 # 不正確：第二列少了一項資料
 table(["姓名", "分數"], [["小明", 90], ["小華"]])</code></pre>
 
-  <h2 id="progress"><code>show_progress(current, total, label='進度')</code></h2>
+  <h2 id="progress"><code>show_progress(current, total, label="進度", *, width=20, complete="█", remaining="░", show_count=False)</code></h2>
   <p>顯示簡單進度列，適合放在 <code>for</code> loop 中。</p>
   <pre><code>from colab_rich import show_progress
 
@@ -240,7 +240,7 @@ for number in range(1, 6):
     <li><code>label</code>：進度列的文字，可以省略。</li>
   </ul>
 
-  <h2 id="markdown"><code>markdown(message)</code></h2>
+  <h2 id="markdown"><code>markdown(message, code_theme="monokai")</code></h2>
   <p>將 Markdown 文字顯示成格式化內容。</p>
   <pre><code>from colab_rich import markdown
 
@@ -260,7 +260,7 @@ markdown("""
 <span class="green">•</span> 第一點
 <span class="green">•</span> 第二點</pre>
 
-  <h2 id="panel"><code>panel(message, title='')</code></h2>
+  <h2 id="panel"><code>panel(message, title="", border_style="cyan", *, expand=True)</code></h2>
   <p>在有框線的面板中顯示重點內容。第二個參數是面板的小標題，可以省略。</p>
   <pre><code>from colab_rich import panel
 
@@ -270,7 +270,7 @@ panel("請記得檢查答案。", "小提示")</code></pre>
 │ 請記得檢查答案。                           │
 ╰────────────────────────────────────────────╯</pre>
 
-  <h2 id="code"><code>code(source, language='python')</code></h2>
+  <h2 id="code"><code>code(source, language="python", *, theme="monokai", line_numbers=True, word_wrap=False)</code></h2>
   <p>以語法顏色和行號顯示程式碼。預設語言是 Python。</p>
   <pre><code>from colab_rich import code
 
@@ -286,7 +286,7 @@ code("&lt;h1&gt;Hello&lt;/h1&gt;", "html")</code></pre>
 
   <h2 id="list">清單和並排項目</h2>
 
-  <h3><code>bullet_list(items)</code></h3>
+  <h3><code>bullet_list(items, bullet="•", bullet_style="bold green")</code></h3>
   <p>將 list 中的每個項目顯示成一行清單。</p>
   <pre><code>from colab_rich import bullet_list
 
@@ -300,7 +300,7 @@ bullet_list([
 <span class="green">•</span> 輸入程式碼
 <span class="green">•</span> 執行程式</pre>
 
-  <h3><code>columns(items)</code></h3>
+  <h3><code>columns(items, *, equal=True, expand=False)</code></h3>
   <p>將簡短項目並排顯示。太長的句子不適合使用這個功能。</p>
   <pre><code>from colab_rich import columns
 
@@ -308,7 +308,7 @@ columns(["紅色", "綠色", "藍色"])</code></pre>
   <p class="terminal-label">預期 terminal 輸出：</p>
   <pre class="terminal">紅色                 綠色                 藍色</pre>
 
-  <h2 id="json"><code>show_json(data)</code></h2>
+  <h2 id="json"><code>show_json(data, *, indent=2, sort_keys=False)</code></h2>
   <p>將 dictionary 或 list 以容易閱讀的 JSON 樣式顯示。</p>
   <pre><code>from colab_rich import show_json
 
@@ -333,7 +333,7 @@ show_json(student)</code></pre>
     <code>display</code> 函式，再顯示元件。
   </p>
 
-  <h3><code>button(label, action=None)</code></h3>
+  <h3><code>button(label, action=None, *, style="primary", tooltip=None, disabled=False)</code></h3>
   <p>
     建立一個按鈕。<code>action</code> 是按下按鈕後執行的零參數函式。
     library 會處理按鈕 event 的細節。
@@ -350,7 +350,7 @@ display(button("按我", say_hello))</code></pre>
   <p>按下按鈕後，結果會顯示在按鈕下面：</p>
   <pre class="terminal"><span class="green">✓ 你好！你按下了按鈕。</span></pre>
 
-  <h3><code>text_box(label, value='')</code></h3>
+  <h3><code>text_box(label, value="", *, placeholder="", disabled=False)</code></h3>
   <p>建立單行文字輸入框。使用 <code>.value</code> 讀取輸入的文字。</p>
   <pre><code>from IPython.display import display
 from colab_rich import text_box
@@ -362,7 +362,7 @@ print(name.value)</code></pre>
   <p class="terminal-label">預期 Colab 畫面：</p>
   <pre class="terminal">你的名字: [                    ]</pre>
 
-  <h3><code>select_box(label, options)</code></h3>
+  <h3><code>select_box(label, options, *, value=None, disabled=False)</code></h3>
   <p>建立下拉選單。使用 <code>.value</code> 讀取目前選擇。</p>
   <pre><code>from IPython.display import display
 from colab_rich import select_box
@@ -374,7 +374,7 @@ print(color.value)</code></pre>
   <p class="terminal-label">預期 Colab 畫面：</p>
   <pre class="terminal">選擇顏色: [紅色        ▼]</pre>
 
-  <h3><code>check_box(label, value=False)</code></h3>
+  <h3><code>check_box(label, value=False, *, disabled=False)</code></h3>
   <p>建立核取方塊。<code>.value</code> 會是 <code>True</code> 或 <code>False</code>。</p>
   <pre><code>from IPython.display import display
 from colab_rich import check_box

@@ -139,17 +139,90 @@ from colab_rich import show_json
 show_json({"姓名": "小明", "分數": 90})
 ```
 
-完整的函式、參數和例子請參考 [繁體中文 HTML API 文件](docs/API.html)。
+## 自訂外觀
 
-如果你想在 GitHub 直接閱讀純文字版本，也可以查看 [Markdown API 文件](docs/API.md)。
+所有函式都有簡單的預設值，也可以只調整需要的部分：
 
-要在本機預覽 HTML 文件，可以在專案根目錄執行：
+```python
+from colab_rich import bullet_list, code, panel, show_progress, table, title
 
-```bash
-python -m http.server 8000
+title("靠左的標題", style="bold green", align="left")
+panel("不會佔滿整行", "提示", border_style="yellow", expand=False)
+code("const answer = 42;", "javascript", line_numbers=False)
+bullet_list(["早餐", "午餐", "晚餐"], bullet="→")
+table(["項目", "狀態"], [["測試", "完成"]], title="工作清單", show_lines=True)
+show_progress(7, 10, "下載中", width=30, show_count=True)
 ```
 
-然後在瀏覽器開啟 <http://localhost:8000/docs/API.html>。
+## API 參考
+
+這份 API 參考直接放在 README，因此可以在 GitHub 專案首頁閱讀。標有 `*` 後面的參數必須使用名稱傳入，例如 `code(source, theme="github-dark")`。
+
+### 輸出
+
+#### `print_text(message, style=None)`
+
+顯示一般文字，不會把內容當作 Rich markup。`style` 可使用 Rich 樣式，例如 `"bold red"`。
+
+#### `title(message, style="bold blue", align="center")`
+
+顯示分隔線標題。`align` 可設為 `"left"`、`"center"` 或 `"right"`。
+
+#### `success(message, prefix="✓")`
+
+#### `info(message, prefix="ℹ")`
+
+#### `warning(message, prefix="!")`
+
+#### `error(message, prefix="✗")`
+
+顯示不同顏色的狀態訊息。使用 `prefix` 可以更換訊息前面的符號：
+
+```python
+success("所有測試通過", prefix="OK")
+warning("磁碟空間不多", prefix="注意")
+```
+
+### 表格和進度
+
+#### `table(headers, rows, title=None, *, header_style="bold magenta", show_lines=False, expand=False)`
+
+顯示表格。`headers` 是欄位名稱；`rows` 是資料列，每列的項目數必須與欄位數相同。
+
+- `title`：表格上方的標題。
+- `header_style`：表頭的 Rich 樣式。
+- `show_lines`：是否在資料列之間畫線。
+- `expand`：是否讓表格使用整行寬度。
+
+#### `show_progress(current, total, label="進度", *, width=20, complete="█", remaining="░", show_count=False)`
+
+顯示單次進度狀態。`width` 控制進度列長度；`complete` 和 `remaining` 必須各是一個字元；`show_count=True` 會同時顯示例如 `7/10` 的數量。
+
+### 格式化內容
+
+#### `markdown(message, code_theme="monokai")`
+
+顯示 Markdown，`code_theme` 控制 Markdown 程式碼區塊的色彩主題。
+
+#### `panel(message, title="", border_style="cyan", *, expand=True)`
+
+在框線中顯示內容。可以設定標題、框線樣式，以及是否使用整行寬度。
+
+#### `code(source, language="python", *, theme="monokai", line_numbers=True, word_wrap=False)`
+
+顯示有語法顏色的程式碼。支援 Pygments 認識的語言與主題。
+
+#### `bullet_list(items, bullet="•", bullet_style="bold green")`
+
+逐行顯示項目清單，可自訂符號和符號樣式。
+
+#### `columns(items, *, equal=True, expand=False)`
+
+並排顯示簡短項目。`equal` 控制欄寬是否相同，`expand` 控制是否使用整行寬度。
+
+#### `show_json(data, *, indent=2, sort_keys=False)`
+
+顯示 JSON 資料。`indent` 控制縮排空格，`sort_keys=True` 會按 key 排序。不能轉換成 JSON 的資料會產生 `TypeError`。
 
 ## Google Colab 互動元件
 
@@ -184,12 +257,14 @@ display(button("顯示答案", show_answer))
 
 可用的基本元件：
 
-- `button(label, action=None)`：建立按鈕；`action` 是按下後執行的函式。
-- `text_box(label, value="")`：建立文字輸入框。
-- `select_box(label, options)`：建立下拉選單。
-- `check_box(label, value=False)`：建立核取方塊。
+- `button(label, action=None, *, style="primary", tooltip=None, disabled=False)`：建立按鈕；`action` 是按下後執行的零參數函式。
+- `text_box(label, value="", *, placeholder="", disabled=False)`：建立文字輸入框。
+- `select_box(label, options, *, value=None, disabled=False)`：建立下拉選單；`value` 可指定預設選項。
+- `check_box(label, value=False, *, disabled=False)`：建立核取方塊。
 
-完整的函式、參數和例子請參考 [繁體中文 HTML API 文件](docs/API.html)。
+文字框、下拉選單和核取方塊可使用 `.value` 讀取或更新目前值。`disabled=True` 可以暫停使用元件。
+
+README 已包含完整 API。需要獨立文件時，也可以閱讀 [Markdown API 文件](docs/API.md) 或 [HTML API 文件](docs/API.html)。
 
 ## 第一版的範圍
 

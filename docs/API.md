@@ -33,7 +33,7 @@ from colab_rich import (
 
 ---
 
-## `print_text(message)`
+## `print_text(message, style=None)`
 
 顯示普通文字。
 
@@ -45,10 +45,11 @@ print_text("你好，Colab！")
 
 - `message` 可以是文字、數字或其他 Python 資料。
 - 內容會按照原本的文字顯示。
+- `style` 可設定 Rich 顏色或樣式，例如 `"bold red"`。
 
 ---
 
-## `title(message)`
+## `title(message, style='bold blue', align='center')`
 
 顯示一個有分隔線的標題。
 
@@ -60,10 +61,11 @@ title("第一部分：資料輸入")
 
 - `message` 是標題內容。
 - 適合用來分開程式不同部分的輸出。
+- `style` 控制標題樣式；`align` 可以是 `left`、`center` 或 `right`。
 
 ---
 
-## `success(message)`、`info(message)`、`warning(message)` 和 `error(message)`
+## `success(message, prefix='✓')`、`info()`、`warning()` 和 `error()`
 
 顯示不同種類的訊息。
 
@@ -82,9 +84,11 @@ error("找不到檔案")
 success("答案正確！")
 ```
 
+四個函式都可用 `prefix` 更換前方符號。
+
 ---
 
-## `table(headers, rows)`
+## `table(headers, rows, title=None, *, header_style='bold magenta', show_lines=False, expand=False)`
 
 顯示整齊的表格。
 
@@ -104,6 +108,8 @@ table(
 
 - `headers`：欄位名稱，例如 `['姓名', '分數']`。
 - `rows`：資料列。每一列的資料數量必須和欄位數量相同。
+- `title`：可選的表格標題。
+- `header_style`、`show_lines`、`expand`：控制表頭樣式、列分隔線和表格寬度。
 
 正確例子：
 
@@ -123,7 +129,7 @@ table(
 
 ---
 
-## `show_progress(current, total, label='進度')`
+## `show_progress(current, total, label='進度', *, width=20, complete='█', remaining='░', show_count=False)`
 
 顯示簡單的進度列，適合放在 `for` loop 中。
 
@@ -145,12 +151,15 @@ show_progress(3, 10, "下載中")
 - `current`：目前完成的數量。
 - `total`：總數量，必須大於 0。
 - `label`：進度列前面的文字，可以省略。
+- `width`：進度列的字元寬度。
+- `complete`、`remaining`：已完成及未完成部分使用的單一字元。
+- `show_count`：是否顯示目前數量和總數。
 
 `current` 必須介乎 `0` 和 `total` 之間。
 
 ---
 
-## `markdown(message)`
+## `markdown(message, code_theme='monokai')`
 
 將 Markdown 文字顯示成格式化內容。
 
@@ -171,7 +180,7 @@ markdown("""
 
 ---
 
-## `panel(message, title='')`
+## `panel(message, title='', border_style='cyan', *, expand=True)`
 
 在框線中顯示一段重點內容。
 
@@ -191,10 +200,12 @@ panel("這是一段重要內容。")
 
 - `message`：面板內的內容。
 - `title`：面板上方的小標題，可以省略。
+- `border_style`：框線的 Rich 樣式。
+- `expand`：面板是否使用整行寬度。
 
 ---
 
-## `code(source, language='python')`
+## `code(source, language='python', *, theme='monokai', line_numbers=True, word_wrap=False)`
 
 以語法顏色顯示程式碼。
 
@@ -214,10 +225,11 @@ code("console.log('Hello');", "javascript")
 ```
 
 常見的語言名稱包括 `python`、`javascript`、`html` 和 `css`。
+也可以設定色彩 `theme`、行號和自動換行。
 
 ---
 
-## `bullet_list(items)`
+## `bullet_list(items, bullet='•', bullet_style='bold green')`
 
 將 list 中的每一項顯示成項目清單。
 
@@ -235,7 +247,7 @@ bullet_list([
 
 ---
 
-## `columns(items)`
+## `columns(items, *, equal=True, expand=False)`
 
 將簡短項目並排顯示。
 
@@ -249,7 +261,7 @@ columns(["紅色", "綠色", "藍色"])
 
 ---
 
-## `show_json(data)`
+## `show_json(data, *, indent=2, sort_keys=False)`
 
 將 dictionary 或 list 以容易閱讀的 JSON 樣式顯示。
 
@@ -290,7 +302,7 @@ show_json(["Python", "Math", "English"])
 from IPython.display import display
 ```
 
-### `button(label, action=None)`
+### `button(label, action=None, *, style='primary', tooltip=None, disabled=False)`
 
 建立一個按鈕。`action` 是按下按鈕後執行的零參數函式。
 
@@ -321,7 +333,7 @@ display(button("按我", say_hello))
 display(button("這是一個按鈕"))
 ```
 
-### `text_box(label, value='')`
+### `text_box(label, value='', *, placeholder='', disabled=False)`
 
 建立單行文字輸入框。使用 `.value` 讀取學生輸入的文字。
 
@@ -342,7 +354,7 @@ print(name.value)
 你的名字: [                    ]
 ```
 
-### `select_box(label, options)`
+### `select_box(label, options, *, value=None, disabled=False)`
 
 建立下拉選單。`options` 是選項 list，使用 `.value` 讀取目前選擇。
 
@@ -362,7 +374,7 @@ print(color.value)
 選擇顏色: [紅色        ▼]
 ```
 
-### `check_box(label, value=False)`
+### `check_box(label, value=False, *, disabled=False)`
 
 建立核取方塊。勾選狀態可以從 `.value` 讀取，結果是 `True` 或 `False`。
 

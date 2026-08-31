@@ -7,7 +7,15 @@ from rich.table import Table
 from .console import console as _console
 
 
-def table(headers: Sequence[object], rows: Iterable[Sequence[object]]) -> None:
+def table(
+    headers: Sequence[object],
+    rows: Iterable[Sequence[object]],
+    title: str | None = None,
+    *,
+    header_style: str = "bold magenta",
+    show_lines: bool = False,
+    expand: bool = False,
+) -> None:
     """顯示表格。
 
     Args:
@@ -26,7 +34,13 @@ def table(headers: Sequence[object], rows: Iterable[Sequence[object]]) -> None:
                 f"但需要 {len(header_list)} 個。"
             )
 
-    rich_table = Table(show_header=True, header_style="bold magenta")
+    rich_table = Table(
+        title=title,
+        show_header=True,
+        header_style=header_style,
+        show_lines=show_lines,
+        expand=expand,
+    )
     for header in header_list:
         rich_table.add_column(header)
 
