@@ -9,13 +9,27 @@
 在 Google Colab 的 cell 中執行：
 
 ```python
-!pip install colab-rich
+!pip install git+https://github.com/tamhofung/cpu_colab_rich_python.git
 ```
 
-在自己的 Python 專案中執行：
+在自己的 Python 專案中使用 `pip` 安裝：
 
 ```bash
-pip install colab-rich
+python -m pip install git+https://github.com/tamhofung/cpu_colab_rich_python.git
+```
+
+### 使用 uv
+
+如果電腦已經安裝 [uv](https://docs.astral.sh/uv/)，可以直接從 GitHub 加入專案：
+
+```bash
+uv add "colab-rich @ git+https://github.com/tamhofung/cpu_colab_rich_python.git"
+```
+
+然後使用 `uv run` 執行 Python：
+
+```bash
+uv run python your_program.py
 ```
 
 ## 快速開始
@@ -286,6 +300,18 @@ README 已包含完整 API。需要獨立文件時，也可以閱讀 [Markdown A
 這個專案第一版只簡化 Rich 的常用輸出功能。Textual 是另一個建立互動式 terminal app 的工具，目前不在本專案的第一版範圍內。
 
 ## 開發者安裝
+
+使用 `uv`：
+
+```bash
+git clone https://github.com/tamhofung/cpu_colab_rich_python.git
+cd cpu_colab_rich_python
+uv sync
+uv run python main.py
+uv run python -m unittest discover -s tests -v
+```
+
+或使用 `pip`：
 
 ```bash
 pip install -e .
